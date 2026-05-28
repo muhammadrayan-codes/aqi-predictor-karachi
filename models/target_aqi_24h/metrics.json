@@ -1,9 +1,0 @@
-{
-  "model_name": "Random Forest",
-  "target": "target_aqi_24h",
-  "model": "Random Forest",
-  "rmse": 11.982156012651414,
-  "mae": 7.453095436298663,
-  "r2": 0.832780850292866,
-  "trained_at": "2026-05-28 07:19"
-}

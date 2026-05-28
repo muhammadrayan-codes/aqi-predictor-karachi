@@ -1,0 +1,30 @@
+# Data fetching and manipulation
+pandas
+numpy
+requests
+python-dotenv
+openmeteo-requests
+pyarrow
+
+# Machine Learning & Serialization
+scikit-learn
+xgboost
+joblib
+
+# Model Monitoring & Registry
+mlflow
+dagshub
+
+# Explainability & Dashboard
+shap
+streamlit
+plotly
+matplotlib
+
+# API & Web Server
+fastapi
+uvicorn
+
+# Testing & Utilities
+pytest
+schedule

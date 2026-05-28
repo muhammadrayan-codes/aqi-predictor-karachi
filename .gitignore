@@ -45,6 +45,7 @@ share/python-wheels/
 # OS files
 .DS_Store
 Thumbs.db
+models/
 
 # Streamlit
 .streamlit/

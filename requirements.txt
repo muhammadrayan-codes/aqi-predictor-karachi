@@ -20,6 +20,7 @@ shap
 streamlit
 plotly
 matplotlib
+seaborn
 
 # API & Web Server
 fastapi

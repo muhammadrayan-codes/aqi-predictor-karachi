@@ -4,16 +4,11 @@ numpy
 requests
 python-dotenv
 openmeteo-requests
-pyarrow>=15.0.0
 
-# Machine Learning & Serialization
+# Machine Learning & Serialization (dashboard needs these to unpickle models)
 scikit-learn
 xgboost
 joblib
-
-# Model Monitoring & Registry
-mlflow==2.17.2
-dagshub
 
 # Explainability & Dashboard
 shap
@@ -22,14 +17,6 @@ plotly
 matplotlib
 seaborn
 
-# API & Web Server
-fastapi
-uvicorn
-
 # Testing & Utilities
 pytest
 schedule
-
-# Compatibility fixes for Streamlit Cloud (Python 3.14)
-protobuf>=4.25.0
-setuptools>=68.0.0

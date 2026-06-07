@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import plotly.graph_objects as go
-from training_pipeline import AQIDeltaRegressor
+from model_utils import AQIDeltaRegressor
 
 # ── Page Config ──
 st.set_page_config(page_title="AirCast // Karachi AQI", page_icon="🌌", layout="wide", initial_sidebar_state="expanded")

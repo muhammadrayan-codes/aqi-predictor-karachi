@@ -4,7 +4,7 @@ numpy
 requests
 python-dotenv
 openmeteo-requests
-pyarrow==24.0.0
+# pyarrow version will be resolved by mlflow (>=4,<15)
 
 # Machine Learning & Serialization
 scikit-learn

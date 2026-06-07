@@ -584,7 +584,7 @@ def aqi_category(val):
 # ── Hero Section ──
 st.markdown(f"""
 <div class="hero-container">
-    <div class="hero-badge"><span class="pulse-dot"></span>LIVE TELEMETRY &nbsp;·&nbsp; LAST INGEST: {last_time}</div>
+    <div class="hero-badge"><span class="pulse-dot"></span>LIVE TELEMETRY</div>
     <div class="hero-title">A I R C A S T</div>
     <div class="hero-subtitle">// Karachi Air Quality Intelligence & Forecasting</div>
 </div>

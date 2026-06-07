@@ -1,5 +1,5 @@
 """
-AETHERIS — Karachi AQI Forecast Dashboard
+AirCast — Karachi AQI Forecast Dashboard
 A premium, futuristic Streamlit dashboard for real-time AQI prediction.
 """
 import os, json, joblib
@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 from training_pipeline import AQIDeltaRegressor
 
 # ── Page Config ──
-st.set_page_config(page_title="AETHERIS // Karachi AQI", page_icon="🌌", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="AirCast // Karachi AQI", page_icon="🌌", layout="wide", initial_sidebar_state="expanded")
 
 # ── Feature columns the trained models expect (34 features) ──
 MODEL_FEATURES = [
@@ -580,7 +580,7 @@ def aqi_category(val):
 st.markdown(f"""
 <div class="hero-container">
     <div class="hero-badge"><span class="pulse-dot"></span>LIVE TELEMETRY &nbsp;·&nbsp; LAST INGEST: {last_time}</div>
-    <div class="hero-title">A E T H E R I S</div>
+    <div class="hero-title">A I R C A S T</div>
     <div class="hero-subtitle">// Karachi Air Quality Intelligence & Forecasting</div>
 </div>
 """, unsafe_allow_html=True)

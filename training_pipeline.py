@@ -389,7 +389,38 @@ def save_best_model(model, model_name: str, target: str, metrics: dict):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def run_training():
+def run_training(pretrain: bool = False):
+    print(f"\n{'='*60}")
+    print(f"  AQI Training Pipeline -- {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print(f"{'='*60}")
+
+    setup_mlflow()
+
+    df = load_features()
+
+    # ── Temporal window filter (applied before cleaning) ──────────────────────
+    if pretrain:
+        # Use the full back‑filled 90‑day window (no additional cutoff).
+        cutoff = pd.Timestamp.now() - pd.Timedelta(days=90)
+    else:
+        # Incremental training on the most recent 24 hours only.
+        cutoff = pd.Timestamp.now() - pd.Timedelta(hours=24)
+    if "timestamp" in df.columns:
+        df["timestamp"] = pd.to_datetime(df["timestamp"])
+        df = df[df["timestamp"] >= cutoff]
+    elif "unix_time" in df.columns:
+        df = df[df["unix_time"] >= int(cutoff.timestamp())]
+
+    # Summer months only — March through October
+    if "month" in df.columns:
+        df = df[df["month"].isin([3, 4, 5, 6, 7, 8, 9, 10])]
+    elif "timestamp" in df.columns:
+        df = df[df["timestamp"].dt.month.isin([3, 4, 5, 6, 7, 8, 9, 10])]
+
+    print(f"   -> {len(df)} rows after temporal window filter")
+
+    # ── Data cleaning ─────────────────────────────────────────────────────────
+    df = clean_data(df)
     print(f"\n{'='*60}")
     print(f"  AQI Training Pipeline -- {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"{'='*60}")
@@ -436,6 +467,12 @@ def run_training():
             best_model, best_name, best_metrics = train_for_target(df, target)
             if best_model is not None:
                 save_best_model(best_model, best_name, target, best_metrics)
+                # Log and register the best model for this target in the Model Registry
+                mlflow.sklearn.log_model(
+                    sk_model=best_model,
+                    artifact_path=f"best_model_{target}",
+                    registered_model_name=f"aqi_karachi_{target}"
+                )
 
     print(f"\n{'='*60}")
     print("  [OK] Training complete! Check MLflow UI on DagsHub.")

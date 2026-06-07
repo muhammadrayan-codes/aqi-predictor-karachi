@@ -8,6 +8,8 @@ on:
 jobs:
   update-features:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     permissions:
       contents: write    # Required to push commits back to the repo
 

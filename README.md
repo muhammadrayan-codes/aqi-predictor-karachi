@@ -4,6 +4,10 @@
 
 This repository implements an **end‑to‑end, serverless AQI forecasting pipeline** for Karachi. It fetches historic and real‑time air‑quality and weather data from the **Open‑Meteo** APIs, engineers a rich set of features, stores them in a Parquet‑based feature store, trains three horizon models (24 h, 48 h, 72 h) with **scikit‑learn** (Ridge, Random Forest, XGBoost) wrapped in a custom `AQIDeltaRegressor`, logs experiments and registers models in **MLflow**, and serves real‑time predictions through a **Streamlit** dashboard.
 
+✨ **Live demo:** https://aqi-predictor-karachi-vdtnfg6rzatxqniuho9vj2.streamlit.app/
+
+> **UI updates:** Hero badge now shows only “LIVE TELEMETRY” and the subtitle no longer contains the leading slashes, providing a cleaner look.
+
 ## Technology Stack
 - **Python** 3.11+
 - **Data handling**: pandas, numpy, pyarrow

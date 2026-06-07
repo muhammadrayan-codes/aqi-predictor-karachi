@@ -532,13 +532,18 @@ html, body, [class*="css"] {
 
 
 # ── Data & Model Loading ──
-@st.cache_data
 def load_data():
+    """Load the latest feature data.
+    
+    The original implementation used @st.cache_data, which caused the data to be cached and not refreshed when the underlying parquet file was updated hourly. 
+    Removing the cache ensures the dashboard always reads the most recent data on each run.
+    """
     path = os.path.join("data", "features.parquet")
     if not os.path.exists(path):
         return None
     df = pd.read_parquet(path)
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df["timestamp"] = pd.to_datetime(df["timestamp"], utc=False)
+    # Ensure rows are sorted chronologically so the latest entry is last
     return df.sort_values("timestamp")
 
 @st.cache_resource

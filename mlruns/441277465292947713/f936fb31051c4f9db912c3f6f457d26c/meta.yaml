@@ -1,0 +1,14 @@
+artifact_uri: file:///C://Users/PVT-019/aqi-predictor-karachi/mlruns/441277465292947713/f936fb31051c4f9db912c3f6f457d26c/artifacts
+end_time: 1785590475387
+entry_point_name: ''
+experiment_id: '441277465292947713'
+lifecycle_stage: active
+run_id: f936fb31051c4f9db912c3f6f457d26c
+run_name: target_aqi_72h__Ridge_Regression__fold2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1785590469173
+status: 3
+tags: []
+user_id: PVT-019

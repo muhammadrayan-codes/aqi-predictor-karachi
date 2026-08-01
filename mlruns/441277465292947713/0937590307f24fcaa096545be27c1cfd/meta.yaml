@@ -1,0 +1,14 @@
+artifact_uri: file:///C://Users/PVT-019/aqi-predictor-karachi/mlruns/441277465292947713/0937590307f24fcaa096545be27c1cfd/artifacts
+end_time: 1785590550117
+entry_point_name: ''
+experiment_id: '441277465292947713'
+lifecycle_stage: active
+run_id: 0937590307f24fcaa096545be27c1cfd
+run_name: target_aqi_72h__XGBoost__fold3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1785590544667
+status: 3
+tags: []
+user_id: PVT-019

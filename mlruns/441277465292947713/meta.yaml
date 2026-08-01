@@ -1,0 +1,9 @@
+artifact_location: file:///C://Users/PVT-019/aqi-predictor-karachi/mlruns/441277465292947713
+creation_time: 1785590343238
+effective_trace_archival_retention: null
+experiment_id: '441277465292947713'
+last_update_time: 1785590343238
+lifecycle_stage: active
+name: aqi_karachi_forecasting
+trace_location: null
+workspace: default

@@ -138,11 +138,25 @@ class AQIDeltaRegressor(BaseEstimator, RegressorMixin):
 # ── MLflow Setup ──────────────────────────────────────────────────────────────
 
 def setup_mlflow():
-    os.environ["MLFLOW_TRACKING_USERNAME"] = MLFLOW_TRACKING_USERNAME or ""
-    os.environ["MLFLOW_TRACKING_PASSWORD"] = MLFLOW_TRACKING_PASSWORD or ""
-    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+    """Configure MLflow tracking.
+
+    Prefer a user-provided MLFLOW_TRACKING_URI; otherwise fall back to a local
+    SQLite database (sqlite:///mlflow.db) which works on all platforms and does
+    not trigger the file‑store maintenance mode.
+    """
+    if MLFLOW_TRACKING_URI:
+        mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+        if MLFLOW_TRACKING_USERNAME:
+            os.environ["MLFLOW_TRACKING_USERNAME"] = MLFLOW_TRACKING_USERNAME
+        if MLFLOW_TRACKING_PASSWORD:
+            os.environ["MLFLOW_TRACKING_PASSWORD"] = MLFLOW_TRACKING_PASSWORD
+        print(f"MLflow connected -> {MLFLOW_TRACKING_URI}")
+    else:
+        sqlite_uri = "sqlite:///mlflow.db"
+        mlflow.set_tracking_uri(sqlite_uri)
+        print("MLflow tracking URI not set; using SQLite DB", sqlite_uri)
     mlflow.set_experiment("aqi_karachi_forecasting")
-    print(f"MLflow connected -> {MLFLOW_TRACKING_URI}")
+    print(f"MLflow connected -> {mlflow.get_tracking_uri()}")
 
 
 # ── Load Features ─────────────────────────────────────────────────────────────
@@ -303,7 +317,7 @@ def train_for_target(df: pd.DataFrame, target: str):
                 mlflow.log_metric("rmse",  fold_m["rmse"])
                 mlflow.log_metric("mae",   fold_m["mae"])
                 mlflow.log_metric("r2",    fold_m["r2"])
-                mlflow.sklearn.log_model(model, artifact_path="model")
+                mlflow.sklearn.log_model(model, artifact_path="model", serialization_format="cloudpickle")
 
         if not fold_rmses:
             continue
@@ -389,7 +403,7 @@ def save_best_model(model, model_name: str, target: str, metrics: dict):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def run_training(pretrain: bool = False):
+def run_training(pretrain: bool = True):
     print(f"\n{'='*60}")
     print(f"  AQI Training Pipeline -- {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"{'='*60}")
@@ -405,32 +419,6 @@ def run_training(pretrain: bool = False):
     else:
         # Incremental training on the most recent 24 hours only.
         cutoff = pd.Timestamp.now() - pd.Timedelta(hours=24)
-    if "timestamp" in df.columns:
-        df["timestamp"] = pd.to_datetime(df["timestamp"])
-        df = df[df["timestamp"] >= cutoff]
-    elif "unix_time" in df.columns:
-        df = df[df["unix_time"] >= int(cutoff.timestamp())]
-
-    # Summer months only — March through October
-    if "month" in df.columns:
-        df = df[df["month"].isin([3, 4, 5, 6, 7, 8, 9, 10])]
-    elif "timestamp" in df.columns:
-        df = df[df["timestamp"].dt.month.isin([3, 4, 5, 6, 7, 8, 9, 10])]
-
-    print(f"   -> {len(df)} rows after temporal window filter")
-
-    # ── Data cleaning ─────────────────────────────────────────────────────────
-    df = clean_data(df)
-    print(f"\n{'='*60}")
-    print(f"  AQI Training Pipeline -- {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    print(f"{'='*60}")
-
-    setup_mlflow()
-
-    df = load_features()
-
-    # ── Temporal window filter (applied before cleaning) ──────────────────────
-    cutoff = pd.Timestamp.now() - pd.Timedelta(days=90)
     if "timestamp" in df.columns:
         df["timestamp"] = pd.to_datetime(df["timestamp"])
         df = df[df["timestamp"] >= cutoff]
@@ -471,7 +459,8 @@ def run_training(pretrain: bool = False):
                 mlflow.sklearn.log_model(
                     sk_model=best_model,
                     artifact_path=f"best_model_{target}",
-                    registered_model_name=f"aqi_karachi_{target}"
+                    registered_model_name=f"aqi_karachi_{target}",
+                    serialization_format="cloudpickle"
                 )
 
     print(f"\n{'='*60}")
@@ -480,4 +469,9 @@ def run_training(pretrain: bool = False):
 
 
 if __name__ == "__main__":
-    run_training()
+    pretrain = True
+    if "--daily" in sys.argv:
+        pretrain = False
+    elif "--pretrain" in sys.argv:
+        pretrain = True
+    run_training(pretrain=pretrain)
